@@ -32,10 +32,10 @@ simulate_bias_and_variance <- function(alpha, beta, sample_size){
   beta_bias <- final_beta_est - beta
   
   # 3. calculate cr bound
-  fisher_inf_alpha <- trigamma(alpha)
+  fisher_inf_alpha <- trigamma(final_alpha_est)
   cr_bound_alpha <- 1 / (sample_size * fisher_inf_alpha)
   
-  fisher_inf_beta <- alpha / beta^2
+  fisher_inf_beta <- alpha / final_beta_est^2
   cr_bound_beta <- 1 / (sample_size * fisher_inf_beta)
   
   # 4. calculate variance
@@ -44,54 +44,54 @@ simulate_bias_and_variance <- function(alpha, beta, sample_size){
   
   return (c(sample_size, final_alpha_est, final_beta_est, alpha_bias, beta_bias, variance_alpha, variance_beta, cr_bound_alpha, cr_bound_beta))
 }
-# 
-# column_names <- c("sample_size", 'final_alpha_est', 'final_beta_est', 'alpha_bias', 'beta_bias', 'variance_alpha', 'variance_beta', 'cr_bound_alpha', 'cr_bound_beta')
-# results <- data.frame(matrix(ncol = length(column_names), nrow = 0))
-# colnames(results) <- column_names
-# 
-# for (i in 1:no_of_steps){
-#   sample_size <- start + step * (i-1)
-#   result <- simulate_bias_and_variance(alpha, beta, sample_size)
-# 
-#   result <- as.data.frame(t(result))
-#   colnames(result) <- column_names
-#   results <- rbind(results, result)
-# }
-# 
-# # plot bias
-# plot(results$alpha_bias ~ results$sample_size,
-#     main = 'Alpha over sample size', xlab = 'sample size', ylab = 'bias')
-# abline(h = 0, col = 'red', lty=2, lwd=2)
-# 
-# plot(results$beta_bias ~ results$sample_size,
-#      main = 'Beta Bias over sample size', xlab = 'sample size', ylab = 'bias')
-# abline(h = 0, col = 'red', lty=2, lwd=2)
-# 
-# # plot cr-bound and variance
-# plot(
-#   results$cr_bound_alpha ~ results$sample_size,
-#   main = 'alpha Variance and CR bound over sample size',
-#   xlab = 'sample size', ylab = 'value',
-#   type = 'l', col = 'red', lwd = 2, ylim=c(0, 0.5), log = 'x'
-# )
-# lines(results$sample_size, results$variance_alpha, col='blue', lwd = 1)
-# legend(
-#   x = 'topright', c('variance', 'cr-bound'), col = c('blue', 'red'),
-#   lty=c(1, 1), lwd = 2
-# )
-# 
-# plot(
-#   results$cr_bound_beta ~ results$sample_size,
-#   main = 'Beta Variance and CR bound over sample size',
-#   xlab = 'sample size', ylab = 'value',
-#   type = 'l', col = 'red', lwd = 2, ylim=c(0, 0.5), log = 'x'
-# )
-# lines(results$sample_size, results$variance_beta, col='blue', lwd = 1)
-# legend(
-#   x = 'topright', c('variance', 'cr-bound'), col = c('blue', 'red'),
-#   lty=c(1, 1), lwd = 2
-# )
-# 
+
+column_names <- c("sample_size", 'final_alpha_est', 'final_beta_est', 'alpha_bias', 'beta_bias', 'variance_alpha', 'variance_beta', 'cr_bound_alpha', 'cr_bound_beta')
+results <- data.frame(matrix(ncol = length(column_names), nrow = 0))
+colnames(results) <- column_names
+
+for (i in 1:no_of_steps){
+  sample_size <- start + step * (i-1)
+  result <- simulate_bias_and_variance(alpha, beta, sample_size)
+
+  result <- as.data.frame(t(result))
+  colnames(result) <- column_names
+  results <- rbind(results, result)
+}
+
+# plot bias
+plot(results$alpha_bias ~ results$sample_size,
+    main = 'Alpha over sample size', xlab = 'sample size', ylab = 'bias')
+abline(h = 0, col = 'red', lty=2, lwd=2)
+
+plot(results$beta_bias ~ results$sample_size,
+     main = 'Beta Bias over sample size', xlab = 'sample size', ylab = 'bias')
+abline(h = 0, col = 'red', lty=2, lwd=2)
+
+# plot cr-bound and variance
+plot(
+  results$cr_bound_alpha ~ results$sample_size,
+  main = 'alpha Variance and CR bound over sample size',
+  xlab = 'sample size', ylab = 'value',
+  type = 'l', col = 'red', lwd = 2, ylim=c(0, 0.5), log = 'x'
+)
+lines(results$sample_size, results$variance_alpha, col='blue', lwd = 1)
+legend(
+  x = 'topright', c('variance', 'cr-bound'), col = c('blue', 'red'),
+  lty=c(1, 1), lwd = 2
+)
+
+plot(
+  results$cr_bound_beta ~ results$sample_size,
+  main = 'Beta Variance and CR bound over sample size',
+  xlab = 'sample size', ylab = 'value',
+  type = 'l', col = 'red', lwd = 2, ylim=c(0, 0.5), log = 'x'
+)
+lines(results$sample_size, results$variance_beta, col='blue', lwd = 1)
+legend(
+  x = 'topright', c('variance', 'cr-bound'), col = c('blue', 'red'),
+  lty=c(1, 1), lwd = 2
+)
+
 
 #### simualte estimators normality
 simulate_normality <- function(alpha, beta, number_of_estimators, sample_size){
